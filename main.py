@@ -98,7 +98,7 @@ def check_collisions(snake):
 
 
 def restart_game():
-    global snake, food, direction, score
+    global snake, food, direction, score, restart_button
 
     # Reset score and direction
     score = 0
@@ -107,6 +107,11 @@ def restart_game():
 
     # Clear canvas
     canvas.delete(ALL)
+
+    # Remove the restart button if it exists
+    if restart_button:
+        restart_button.destroy()
+        restart_button = None
 
     # Recreate snake and food
     snake = Snake()
@@ -117,13 +122,17 @@ def restart_game():
 
 
 def game_over():
+    global restart_button
+
+    # Display "Game Over" message
     canvas.delete(ALL)
     canvas.create_text(canvas.winfo_width() / 2, canvas.winfo_height() / 2 - 50,
                        font=('consolas', 70), text="GAME OVER", fill="red", tag="gameover")
 
-    # Create a "Restart" button
-    restart_button = Button(window, text="Restart", font=('consolas', 20), command=restart_game)
-    restart_button.place(relx=0.5, rely=0.6, anchor=CENTER)
+    # Create a "Restart" button if it doesn't exist
+    if not restart_button:
+        restart_button = Button(window, text="Restart", font=('consolas', 20), command=restart_game)
+        restart_button.place(relx=0.5, rely=0.6, anchor=CENTER)
 
 
 # Initialize game window
@@ -133,6 +142,7 @@ window.resizable(False, False)
 
 score = 0
 direction = 'down'
+restart_button = None  # Initialize the restart_button reference
 
 label = Label(window, text="Score:{}".format(score), font=('consolas', 40))
 label.pack()
